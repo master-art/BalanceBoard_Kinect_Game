@@ -179,9 +179,9 @@ public class CalibrateController : MonoBehaviour {
     public void ReadyButtonGo() {
         Debug.Log("Inside RBG" + pm.GetCurrentSceenIndex());
         if (pm.GetCurrentSceenIndex() != -1) {
-            SceneManager.LoadScene(pm.GetCurrentSceenIndex() + 1);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(pm.GetCurrentSceenIndex() + 1);
         } else {
-            SceneManager.LoadScene(pm.NextSceneAfterCalibration);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(pm.NextSceneAfterCalibration);
         }
     }
 

@@ -2793,7 +2793,7 @@ MonoBehaviour:
   FingerImage: {fileID: 604174764}
   FeetImage: {fileID: 575266942}
   LoadingImage: {fileID: 751652208}
-  IsLoading: 1
+  IsLoading: 0
 --- !u!4 &1850148281
 Transform:
   m_ObjectHideFlags: 0
@@ -3631,7 +3631,7 @@ PrefabInstance:
     - target: {fileID: 7034671160649541464, guid: 0a0fb82fadf50c64e8efdbe389a06f95,
         type: 3}
       propertyPath: CentreOfBalanceDecimalOutput
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7034671160649541465, guid: 0a0fb82fadf50c64e8efdbe389a06f95,
         type: 3}

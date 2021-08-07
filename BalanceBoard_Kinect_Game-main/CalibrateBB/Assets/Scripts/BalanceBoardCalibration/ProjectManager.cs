@@ -34,7 +34,7 @@ public class ProjectManager : MonoBehaviour
         BoardController.SetControllerDirectionType(ControllerType);
         if (NextSceneAfterCalibration == string.Empty) {
             Debug.Log("In Side NextSceneAfterCalibration ");
-            currentScene = SceneManager.GetActiveScene().buildIndex;
+            currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
         }
     }
 
