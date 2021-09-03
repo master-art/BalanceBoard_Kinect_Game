@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 #pragma warning disable 649
 namespace UnityStandardAssets.Vehicles.Car
@@ -32,7 +34,7 @@ namespace UnityStandardAssets.Vehicles.Car
         [SerializeField] private float m_MaxHandbrakeTorque;
         [SerializeField] private float m_Downforce = 100f;
         [SerializeField] private SpeedType m_SpeedType;
-        [SerializeField] private float m_Topspeed = 200;
+        [SerializeField] public static float m_Topspeed = 200;
         [SerializeField] private static int NoOfGears = 5;
         [SerializeField] private float m_RevRangeBoundary = 1f;
         [SerializeField] private float m_SlipLimit;
@@ -56,6 +58,11 @@ namespace UnityStandardAssets.Vehicles.Car
         public float Revs { get; private set; }
         public float AccelInput { get; private set; }
 
+        public Transform[] safePoints;
+
+
+        // first, find the closest safe place
+        Transform closestTransform;
 
         // Use this for initialization
         private void Start()
@@ -73,6 +80,35 @@ namespace UnityStandardAssets.Vehicles.Car
             m_CurrentTorque = m_FullTorqueOverAllWheels - (m_TractionControl*m_FullTorqueOverAllWheels);
         }
 
+        private void Update()
+        {
+            // You have to set up an input button in the Input manager for this!
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                // put this in a different function for general cleanliness
+                ResetAICar();
+            }
+        }
+
+        private void ResetAICar()
+        {
+            float closestDistance = 9999999999;
+            Vector3 currentPos = transform.position;
+            // This goes through every possible safe place and picks the best one
+            foreach (Transform trans in safePoints)
+            {
+                float currentDistance = Vector3.Distance(currentPos, trans.position);
+                if (currentDistance < closestDistance)
+                {
+                    closestDistance = currentDistance;
+                    closestTransform = trans;
+                }
+            }
+
+            // Now we reset the car!
+            transform.position = closestTransform.position;
+            transform.rotation = closestTransform.rotation;
+        }
 
         private void GearChanging()
         {

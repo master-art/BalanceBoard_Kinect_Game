@@ -30,9 +30,6 @@ public class ButtonSelect : MonoBehaviour
 
         if (buttonTimer > totalTime)
         {
-            //ColorBlock sc = button.colors;
-            //sc.pressedColor = new Color(0, 1, 0);
-            //button.colors = sc;
             StartCoroutine(NextStage());
         }
     }

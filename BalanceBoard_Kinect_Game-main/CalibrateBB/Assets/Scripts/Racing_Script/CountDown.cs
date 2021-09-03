@@ -9,7 +9,7 @@ public class CountDown : MonoBehaviour
     public GameObject countDown;
     public GameObject LapTimer;
     public GameObject carControls;
-    public GameObject aICarControl;
+    public GameObject [] aICarControl;
 
     private void Start()
     {
@@ -29,7 +29,11 @@ public class CountDown : MonoBehaviour
         countDown.SetActive(false);
         countDown.GetComponent<Text>().text = "1";
         countDown.SetActive(true);
-        aICarControl.GetComponent<CarAIControl>().enabled = true;
+        for(int i =0; i< aICarControl.Length; i++)
+        {
+            aICarControl[i].GetComponent<CarAIControl>().enabled = true;
+        }
+       
         yield return new WaitForSeconds(1);
         countDown.SetActive(false);
         LapTimer.SetActive(true);

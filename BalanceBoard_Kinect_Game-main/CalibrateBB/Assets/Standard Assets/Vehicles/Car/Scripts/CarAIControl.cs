@@ -46,7 +46,6 @@ namespace UnityStandardAssets.Vehicles.Car
         private float m_AvoidPathOffset;          // direction (-1 or 1) in which to offset path to avoid other car, whilst avoiding
         private Rigidbody m_Rigidbody;
 
-
         private void Awake()
         {
             // get the car controller reference
@@ -58,7 +57,7 @@ namespace UnityStandardAssets.Vehicles.Car
             m_Rigidbody = GetComponent<Rigidbody>();
         }
 
-
+       
         private void FixedUpdate()
         {
             if (m_Target == null || !m_Driving)
@@ -219,4 +218,6 @@ namespace UnityStandardAssets.Vehicles.Car
             m_Driving = true;
         }
     }
+
+    
 }

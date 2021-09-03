@@ -26,7 +26,7 @@ public class BodySourceManager : MonoBehaviour
             {
                 _Sensor.Open();
             }
-        }   
+        }
     }
     
     void Update () 
@@ -40,7 +40,7 @@ public class BodySourceManager : MonoBehaviour
                 {
                     _Data = new Body[_Sensor.BodyFrameSource.BodyCount];
                 }
-                
+                Debug.Log("Body ka Count:" + _Sensor.BodyFrameSource.BodyCount);
                 frame.GetAndRefreshBodyData(_Data);
                 
                 frame.Dispose();

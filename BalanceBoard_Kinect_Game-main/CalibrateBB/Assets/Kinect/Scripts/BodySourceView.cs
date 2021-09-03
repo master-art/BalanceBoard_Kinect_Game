@@ -15,7 +15,7 @@ public class BodySourceView : MonoBehaviour
     {
         JointType.HandLeft,
         JointType.HandRight,
-        JointType.Head,
+        //JointType.Head,
     };
     
     void Update () 

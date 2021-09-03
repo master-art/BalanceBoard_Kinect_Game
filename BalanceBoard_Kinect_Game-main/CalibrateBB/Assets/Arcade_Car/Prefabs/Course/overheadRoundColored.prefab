@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3146730506615175573}
   - component: {fileID: 6264621458067129251}
   - component: {fileID: 417956724120125274}
-  - component: {fileID: 3470092611455034064}
+  - component: {fileID: 2063016234714074054}
   m_Layer: 0
   m_Name: overheadRoundColored
   m_TagString: Untagged
@@ -81,7 +81,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &3470092611455034064
+--- !u!64 &2063016234714074054
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,6 +92,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 729535277351248152, guid: af952baa8c6715a4fb26aa6f841b7e38, type: 3}

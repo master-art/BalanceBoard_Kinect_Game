@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LapComplete : MonoBehaviour
 {
     public GameObject lapCompleteTrig;
-    public GameObject halLapTrig;
+    public GameObject halfLapTrig;
 
     [Header("Display")]
     public GameObject MinuteDB;
@@ -15,29 +15,65 @@ public class LapComplete : MonoBehaviour
 
     //public GameObject LapTimeBox;
 
+    public GameObject lapCounter;
+
+    public int lapsDone = 0;
+
+    public float rawTime;
+
+    public GameObject raceFinish;
+
+    private void Update()
+    {
+            if(lapsDone == 2)
+        {
+            Debug.Log("Active Race Line");
+            raceFinish.SetActive(true);
+        }
+    }
+
     private void OnTriggerEnter()
     {
-        if (LapTimeManager.SecondCount <= 9)
+        lapsDone += 1;
+
+        rawTime = PlayerPrefs.GetFloat("RawTime");
+        if(LapTimeManager.rawTime <= rawTime)
         {
-            SecondDB.GetComponent<Text>().text = "0" + LapTimeManager.SecondCount + ".";
-        } else {
-            SecondDB.GetComponent<Text>().text = "" + LapTimeManager.SecondCount + ".";
+            if (LapTimeManager.SecondCount <= 9)
+            {
+                SecondDB.GetComponent<Text>().text = "0" + LapTimeManager.SecondCount + ".";
+            }
+            else
+            {
+                SecondDB.GetComponent<Text>().text = "" + LapTimeManager.SecondCount + ".";
+            }
+
+            if (LapTimeManager.MinuteCount <= 9)
+            {
+                MinuteDB.GetComponent<Text>().text = "0" + LapTimeManager.MinuteCount + ":";
+            }
+            else
+            {
+                MinuteDB.GetComponent<Text>().text = "" + LapTimeManager.MinuteCount + ":";
+            }
+
+            MilliDB.GetComponent<Text>().text = "" + LapTimeManager.MinuteCount;
+
         }
 
-        if (LapTimeManager.MinuteCount <= 9)
-        {
-            MinuteDB.GetComponent<Text>().text = "0" + LapTimeManager.MinuteCount + ":";
-        } else {
-            MinuteDB.GetComponent<Text>().text = "" + LapTimeManager.MinuteCount + ":";
-        }
+        PlayerPrefs.SetInt("MinSave", LapTimeManager.MinuteCount);
+        PlayerPrefs.SetInt("SecSave", LapTimeManager.SecondCount);
+        PlayerPrefs.SetFloat("MilliSave", LapTimeManager.MiliCount);
+        PlayerPrefs.SetFloat("RawTime", LapTimeManager.rawTime);
 
-        MilliDB.GetComponent<Text>().text = "" + LapTimeManager.MinuteCount;
 
         LapTimeManager.MinuteCount = 0;
         LapTimeManager.SecondCount = 0;
         LapTimeManager.MiliCount = 0;
+        LapTimeManager.rawTime = 0;
+        lapCounter.GetComponent<Text>().text = "" + lapsDone;
 
-        halLapTrig.SetActive(true);
+        halfLapTrig.SetActive(true);
         lapCompleteTrig.SetActive(false);
     }
 }
