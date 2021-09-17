@@ -16,11 +16,12 @@ public class PCarController : MonoBehaviour
     // Start is called before the first frame update
     public Rigidbody carRB;
 
-    public float forwardAccel = 3f, reverseAccel = 4f, maxSpeed = 10f, turnStrength = 180, gravityForce = 10f, dragOnGround = 3f;
-
+    public float forwardAccel, reverseAccel, maxSpeed, turnStrength, gravityForce, dragOnGround;
+    public float turnAccel;
     public Text ControllerType;
 
-    private float speedInput, turnInput, leftTarget, rightHand;
+    private float turnInput, rightHand;
+    public float curSpeed = 0;
 
     private bool grounded;
 
@@ -34,15 +35,21 @@ public class PCarController : MonoBehaviour
     public ParticleSystem[] dustTrail;
     public float maxEmission = 25f;
     private float emissionRate;
-    float x;
-    
+
     public GameObject NearCamera;
     public GameObject FarCamera;
 
     public static ControlType ControlTypeOption;
-    
+
+    public Transform[] safePoints;
+
+
+    // first, find the closest safe place
+    Transform closestTransform;
+
     //This function is for car controlls
     public static PCarController Instance;
+
 
 
     public void Awake()
@@ -55,20 +62,12 @@ public class PCarController : MonoBehaviour
         FarCamera.SetActive(true);
         carRB.transform.parent = null;
         ControllerType.text = ControlTypeOption.ToString();
-
     }
 
     void Update()
     {
-
-        //// You have to set up an input button in the Input manager for this!
-        //if (Input.GetKeyDown(KeyCode.R))
-        //{
-        //    // put this in a different function for general cleanliness
-        //    ResetCar();
-        //}
-
-
+        CheckCarFlip();
+       
         //Camera Change
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -91,7 +90,7 @@ public class PCarController : MonoBehaviour
         //Debug.Log("Right and LEft key value" + turnInput);
 
 
-        Debug.Log("Controller Type" + ControlTypeOption);
+        // Debug.Log("Controller Type" + ControlTypeOption);
         ControllerType.text = ControlTypeOption.ToString();
 
 
@@ -99,23 +98,42 @@ public class PCarController : MonoBehaviour
         switch (ControlTypeOption)
         {
             case ControlType.Balanceboard:
-                    turnInput = BoardController.CenterOfBalance.x;
-                    break;
-            case ControlType.Keyboard:
-                    turnInput = Input.GetAxis("Horizontal");
-                    break;
-            case ControlType.Kinect:
-                    rightHand = KinectControl.KinectInput.x;
-                     if (rightHand >= -1 & rightHand <= 1)
-                        {
-                          turnInput = rightHand;
-                        }
-                    Debug.Log("Kinect TurnInput" + turnInput);
-                    break;
-            default:
-                    turnInput = Input.GetAxis("Horizontal");
+                turnInput = BoardController.CenterOfBalance.x;
                 break;
-       
+            case ControlType.Keyboard:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+                {
+                    curSpeed -= turnAccel;
+                }
+                turnInput = Input.GetAxis("Horizontal");
+
+                break;
+            case ControlType.Kinect:
+                rightHand = KinectControl.KinectInput.x;
+               // var rightHandDown = KinectControl.KinectInput.y;
+                if (rightHand >= -0.8 & rightHand <= 0.8)
+                {
+                    if (rightHand <= -0.5 & rightHand >= -0.5)
+                    {
+                        curSpeed -= turnAccel;
+                    }
+                    turnInput = rightHand;
+                }
+
+                //if (rightHandDown >= 2)
+                //{
+                //    Debug.Log("Kinect TurnInput" + rightHandDown);
+                //}
+
+                break;
+            default:
+                if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+                {
+                    curSpeed -= turnAccel;
+                }
+                turnInput = Input.GetAxis("Horizontal");
+                break;
+
         }
 
         //If car is grounded then to make car left or right movement
@@ -136,7 +154,6 @@ public class PCarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         grounded = false;
         RaycastHit hit;
 
@@ -152,7 +169,15 @@ public class PCarController : MonoBehaviour
         if (grounded)
         {
             carRB.drag = dragOnGround;
-            carRB.AddForce(transform.forward * forwardAccel * maxSpeed);
+
+            carRB.AddForce(transform.forward * curSpeed);
+
+            curSpeed += forwardAccel * Time.deltaTime;
+
+
+            if (curSpeed > maxSpeed)
+                curSpeed = maxSpeed;
+
             emissionRate = maxEmission;
         }
         else
@@ -168,24 +193,38 @@ public class PCarController : MonoBehaviour
         }
     }
 
-    //public void ResetCar()
-    //{
-        
-    //    float closestDistance = 9999999999;
-    //    Vector3 currentPos = transform.position;
-    //    // This goes through every possible safe place and picks the best one
-    //    foreach (Transform trans in safePoints)
-    //    {
-    //        float currentDistance = Vector3.Distance(currentPos, trans.position);
-    //        if (currentDistance < closestDistance)
-    //        {
-    //            closestDistance = currentDistance;
-    //            closestTransform = trans;
-    //        }
-    //    }
 
-    //    // Now we reset the car!
-    //    transform.position = closestTransform.position;
-    //    transform.rotation = closestTransform.rotation;
-    //}
+    private void CheckCarFlip()
+    {
+        // You have to set up an input button in the Input manager for this!
+        if (Input.GetKeyDown(KeyCode.R) || Vector3.Dot(transform.up, Vector3.down) > 0)
+        {
+            // put this in a different function for general cleanliness
+            ResetAICar();
+        }
+    }
+
+
+    private void ResetAICar()
+    {
+        float closestDistance = 9999999999;
+        Vector3 currentPos = transform.position;
+        // This goes through every possible safe place and picks the best one
+        foreach (Transform trans in safePoints)
+        {
+            float currentDistance = Vector3.Distance(currentPos, trans.position);
+            if (currentDistance < closestDistance)
+            {
+                closestDistance = currentDistance;
+                closestTransform = trans;
+            }
+        }
+
+        // Now we reset the car!
+        transform.position = closestTransform.position;
+        transform.rotation = closestTransform.rotation;
+    }
+
+
+   
 }

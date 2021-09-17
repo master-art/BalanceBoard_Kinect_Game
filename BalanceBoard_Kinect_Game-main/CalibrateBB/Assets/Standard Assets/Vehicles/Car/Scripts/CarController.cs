@@ -82,8 +82,15 @@ namespace UnityStandardAssets.Vehicles.Car
 
         private void Update()
         {
+            CheckCarFlip();
+            
+        }
+
+
+        private void CheckCarFlip()
+        {
             // You have to set up an input button in the Input manager for this!
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) || Vector3.Dot(transform.up, Vector3.down) > 0)
             {
                 // put this in a different function for general cleanliness
                 ResetAICar();

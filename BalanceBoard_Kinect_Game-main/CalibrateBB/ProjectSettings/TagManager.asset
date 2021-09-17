@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - AICar
+  - CarPos
+  - Castle
+  - Tank
+  - PC
+  - HL
+  - AILauncher
+  - PlayerLauncher
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -14,12 +22,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - groundLayer
+  - Car1
+  - Car2
+  - Car3
+  - Car4
+  - Car5
   - 
   - 
   - 

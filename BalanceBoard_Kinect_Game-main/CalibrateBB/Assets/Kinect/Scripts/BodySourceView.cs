@@ -1,27 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
-using Windows.Kinect;
+using Kinect = Windows.Kinect;
 using Joint = Windows.Kinect.Joint;
 
 public class BodySourceView : MonoBehaviour 
 {
     public BodySourceManager mBodySourceManager;
     public GameObject nJointObject;
+
+    public static bool isInstantiate = false;
     
     private Dictionary<ulong, GameObject> mBodies = new Dictionary<ulong, GameObject>();
-    private List<JointType> _joints = new List<JointType>
+    private List<Kinect.JointType> _joints = new List<Kinect.JointType>
     {
-        JointType.HandLeft,
-        JointType.HandRight,
-        //JointType.Head,
+        Kinect.JointType.HandLeft,
+        Kinect.JointType.HandRight,
+         Kinect.JointType.Head,
     };
-    
+
+    [System.Obsolete]
     void Update () 
     {
         #region Get Kinect Data
-        Body[] data = mBodySourceManager.GetData();
+        Kinect.Body[] data = mBodySourceManager.GetData();
         if (data == null)
         {
             return;
@@ -73,6 +75,7 @@ public class BodySourceView : MonoBehaviour
                 //if body isn't tracked, create body
                 if(!mBodies.ContainsKey(body.TrackingId))
                 {
+                    Debug.Log("is this also called in Kinect?" + body.TrackingId);
                     mBodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
                 }
                 
@@ -86,51 +89,31 @@ public class BodySourceView : MonoBehaviour
     {
         //Create Body Parent
         GameObject body = new GameObject("Body:" + id);
-        
-        foreach (JointType joint in _joints)
+
+        foreach (Kinect.JointType joint in _joints)
         {
             //Create Object
             GameObject jointObj = Instantiate(nJointObject);
             jointObj.name = joint.ToString();
-            
+            Debug.Log("is Hand Instantiate");
+            isInstantiate = true;
             //Parent to body
             jointObj.transform.parent = body.transform;
         }
 
-        //for (int i =0; i< _joints.Count; i++)
-        //{
-            
-        //    if (_joints.ToString() == JointType.HandRight.ToString())
-        //    {
-        //        //Create Object
-        //            GameObject rJointObj = Instantiate(nRJointObject);
-        //        rJointObj.name = _joints.ToString();
-
-        //        //Parent to body
-        //        rJointObj.transform.parent = body.transform;
-        //    }
-        //    if (_joints.ToString() == JointType.HandLeft.ToString())
-        //    {
-        //        //Create Object
-        //        GameObject lJointObj = Instantiate(nRJointObject);
-        //        lJointObj.name = _joints.ToString();
-
-        //        //Parent to body
-        //        lJointObj.transform.parent = body.transform;
-        //    }
-        //}
-        
         return body;
     }
-    
-    private void RefreshBodyObject(Body body, GameObject bodyObject)
+
+    [System.Obsolete]
+    private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject)
     {
-        foreach (JointType _joint in _joints)
+
+        foreach (Kinect.JointType _joint in _joints)
         {
             Joint sourceJoint = body.Joints[_joint];
             Vector3 targetPosition = GetVector3FromJoint(sourceJoint);
             targetPosition.z = 0;
-          
+
             //Get joint, set new position
             Transform jointObj = bodyObject.transform.Find(_joint.ToString());
             jointObj.position = targetPosition;

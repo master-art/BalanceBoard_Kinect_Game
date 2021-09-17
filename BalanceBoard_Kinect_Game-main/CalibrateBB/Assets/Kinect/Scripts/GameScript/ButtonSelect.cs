@@ -8,7 +8,7 @@ public class ButtonSelect : MonoBehaviour
 {
     public Image imgCircle;
     public UnityEvent MyClick;
-    public float totalTime = 2;
+    public float totalTime = 2f;
     bool buttonStatus;
     public float buttonTimer;
     public Button button;

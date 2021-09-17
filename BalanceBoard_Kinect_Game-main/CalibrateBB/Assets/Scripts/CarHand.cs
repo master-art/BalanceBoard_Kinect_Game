@@ -5,25 +5,28 @@ using UnityEngine.UI;
 public class CarHand : MonoBehaviour
 {
     //public Transform mHandMesh;
-    GameObject HandMesh;
+    GameObject RHandMesh, LHandMesh;
+  
 
 
     private void Start()
     {
-        HandMesh = GameObject.Find("HandRight");
+        RHandMesh = GameObject.Find("HandRight");
+        LHandMesh = GameObject.Find("HandLeft");
     }
 
     // Update is called once per frame
     void Update()
     {
         // HandMesh.transform.position = Vector3.Lerp(HandMesh.transform.position, transform.position, Time.deltaTime * 15.0f);
+        LHandMesh.SetActive(false);
         RaycastSingle();
     }
 
     private void RaycastSingle()
     {
-        Vector3 origin = HandMesh.transform.position;
-        Vector3 direction = HandMesh.transform.forward;
+        Vector3 origin = RHandMesh.transform.position;
+        Vector3 direction = RHandMesh.transform.forward;
 
         Debug.DrawRay(origin, direction * 100f, Color.red);
         Ray ray = new Ray(origin, direction);

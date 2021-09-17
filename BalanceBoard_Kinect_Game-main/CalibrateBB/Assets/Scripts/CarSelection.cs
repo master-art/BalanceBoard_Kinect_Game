@@ -37,7 +37,7 @@ public class CarSelection : MonoBehaviour
     {
         carList[index].SetActive(false);
         index--;
-
+ 
         if (index < 0)
             index = carList.Length - 1;
 

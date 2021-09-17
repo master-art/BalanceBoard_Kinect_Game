@@ -17,27 +17,24 @@ public class LapComplete : MonoBehaviour
 
     public GameObject lapCounter;
 
+    public int AIlapsDone = 0;
     public int lapsDone = 0;
 
     public float rawTime;
 
     public GameObject raceFinish;
 
-    private void Update()
-    {
-            if(lapsDone == 2)
-        {
-            Debug.Log("Active Race Line");
-            raceFinish.SetActive(true);
-        }
-    }
 
     private void OnTriggerEnter()
     {
         lapsDone += 1;
-
+        if (lapsDone == 2)
+        {
+            Debug.Log("Active Race Line");
+            raceFinish.SetActive(true);
+        }
         rawTime = PlayerPrefs.GetFloat("RawTime");
-        if(LapTimeManager.rawTime <= rawTime)
+        if (LapTimeManager.rawTime <= rawTime)
         {
             if (LapTimeManager.SecondCount <= 9)
             {
@@ -73,7 +70,11 @@ public class LapComplete : MonoBehaviour
         LapTimeManager.rawTime = 0;
         lapCounter.GetComponent<Text>().text = "" + lapsDone;
 
+
+
+
         halfLapTrig.SetActive(true);
         lapCompleteTrig.SetActive(false);
+
     }
 }
